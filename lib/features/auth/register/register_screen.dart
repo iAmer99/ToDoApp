@@ -9,6 +9,8 @@ import 'package:todo/features/auth/widgets/auth_container.dart';
 import 'package:todo/features/auth/widgets/auth_textFormField.dart';
 import 'package:todo/features/auth/widgets/myDivider.dart';
 import 'package:todo/features/auth/widgets/social_buttons.dart';
+import 'package:todo/features/bottomBarScreen/bottomBar_screen.dart';
+import 'package:todo/features/home/home_screen.dart';
 import 'package:todo/shared/widgets/colored_button.dart';
 import 'package:todo/shared/widgets/colored_circles.dart';
 import 'package:todo/utils/colors.dart';
@@ -142,7 +144,8 @@ class RegisterScreen extends StatelessWidget {
                             child: ColoredButton(
                                 text: "Register",
                                 function: () {
-                                  if (_formKey.currentState!.validate()) {}
+                                  Navigator.of(context, rootNavigator:  true).pushReplacementNamed(BottomBarScreen.routeName);
+                                  // if (_formKey.currentState!.validate()) {}
                                 }),
                           ),
                           SizedBox(

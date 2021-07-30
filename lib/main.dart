@@ -7,6 +7,8 @@ import 'package:todo/utils/helper_functions.dart';
 import 'package:todo/utils/size_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/bottomBarScreen/bottomBar_screen.dart';
+
 void main() {
   Bloc.observer = SimpleBlocObserver();
   runApp(MyApp());
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
                   primaryColor: mainColor,
-               primarySwatch: mainColorSwatch,
+                  primarySwatch: mainColorSwatch,
                   scaffoldBackgroundColor: secondaryColor,
                 ),
                 onGenerateRoute: generateRoutes,
