@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/login/login_screen.dart';
 import 'package:todo/features/auth/register/cubit/register_cubit.dart';
 import 'package:todo/features/auth/register/cubit/register_state.dart';
@@ -193,7 +194,12 @@ class RegisterScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  SessionManagement.createGuestSession();
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushReplacementNamed(
+                                      BottomBarScreen.routeName);
+                                },
                               ),
                             ),
                           )

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/register/register_screen.dart';
 import 'package:todo/features/onBoarding/cubit/onBoarding_cubit.dart';
 import 'package:todo/features/onBoarding/cubit/onBoarding_states.dart';
@@ -95,6 +96,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: ColoredButton(
                                   text: "Skip",
                                   function: () {
+                                    SessionManagement.onSeenOnBoarding();
                                     Navigator.of(context, rootNavigator: true)
                                         .pushReplacementNamed(
                                         RegisterScreen.routeName);

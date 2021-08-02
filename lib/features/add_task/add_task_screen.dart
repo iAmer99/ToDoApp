@@ -87,9 +87,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             DateTime(DateTime.now().year - 20),
                                         lastDate:
                                             DateTime(DateTime.now().year + 30))
-                                    .then((value) {
+                                    .then((DateTime? value) {
                                   _date.text =
-                                      "${value!.day}/${value!.month}/${value!.year}";
+                                      "${value!.day}/${value.month}/${value.year}";
                                 });
                               },
                               child: IgnorePointer(
@@ -107,8 +107,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                               onTap: () async {
                                 await showTimePicker(
                                     context: context,
-                                    initialTime: TimeOfDay.now()).then((value){
-                                          _time.text = "${value!.hour}:${value!.minute}";
+                                    initialTime: TimeOfDay.now()).then((TimeOfDay? value){
+                                          _time.text = "${value!.hour}:${value.minute}";
                                 });
                               },
                               child: IgnorePointer(
