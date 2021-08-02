@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/bloc_observer.dart';
-import 'package:todo/features/splash/presentation/splash_screen.dart';
+import 'package:todo/features/splash/splash_screen.dart';
 import 'package:todo/transitions/routes.dart';
 import 'package:todo/utils/colors.dart';
 import 'package:todo/utils/helper_functions.dart';

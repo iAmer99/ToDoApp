@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todo/features/auth/login/cubit/login_cubit.dart';
 import 'package:todo/features/auth/register/register_screen.dart';
-import 'package:todo/features/auth/widgets/auth_container.dart';
+import 'package:todo/shared/widgets/myContainer.dart';
 import 'package:todo/features/auth/widgets/auth_textFormField.dart';
-import 'package:todo/features/auth/widgets/myDivider.dart';
+import 'package:todo/shared/widgets/myDivider.dart';
 import 'package:todo/features/auth/widgets/social_buttons.dart';
 import 'package:todo/shared/widgets/colored_button.dart';
 import 'package:todo/shared/widgets/colored_circles.dart';
@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                           SizedBox(
                             height: 5 * heightMultiplier,
                           ),
-                          AuthContainer(
+                          MyContainer(
                               child: Form(
                             key: _formKey,
                             child: Column(

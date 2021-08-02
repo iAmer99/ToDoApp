@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/features/home/widgets/dayTasks.dart';
 import 'package:todo/features/home/widgets/day_content_builder.dart';
 import 'package:todo/features/home/widgets/noTasks.dart';
+import 'package:todo/features/settings/settings_screen.dart';
 import 'package:todo/shared/widgets/task_widget.dart';
 import 'package:todo/shared/widgets/white_circles.dart';
 import 'package:todo/utils/colors.dart';
@@ -68,20 +69,26 @@ class _HomeScreenState extends State<HomeScreen>
                             padding: EdgeInsets.only(
                                 bottom: 5 * widthMultiplier,
                                 left: 3 * heightMultiplier),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.settings,
-                                  color: Colors.white,
-                                  size: 7.5 * imageSizeMultiplier,
-                                ),
-                                Text(
-                                  "Settings",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 2.5 * textMultiplier),
-                                )
-                              ],
+                            child: InkWell(
+                              onTap: (){
+                                Navigator.of(context, rootNavigator: true).pushNamed(SettingsScreen.routeName);
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.settings,
+                                    color: Colors.white,
+                                    size: 7.5 * imageSizeMultiplier,
+                                  ),
+                                  Text(
+                                    "Settings",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 2.5 * textMultiplier),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -194,10 +201,15 @@ class _HomeScreenState extends State<HomeScreen>
               child: Padding(
                 padding: EdgeInsets.only(
                     top: 6 * heightMultiplier, right: 3 * widthMultiplier),
-                child: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 7.5 * imageSizeMultiplier,
+                child: IconButton(
+                  onPressed: (){
+                    Navigator.of(context, rootNavigator: true).pushNamed(SettingsScreen.routeName);
+                  },
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 7.5 * imageSizeMultiplier,
+                  ),
                 ),
               ),
               alignment: Alignment.topRight,

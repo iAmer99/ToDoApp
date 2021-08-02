@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:todo/utils/colors.dart';
 import 'package:todo/utils/size_config.dart';
 
-class AuthContainer extends StatelessWidget {
+class MyContainer extends StatelessWidget {
   final Widget child;
 
-  const AuthContainer({required this.child});
+  const MyContainer({required this.child});
 
   @override
   Widget build(BuildContext context) {

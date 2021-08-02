@@ -5,9 +5,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todo/features/auth/login/login_screen.dart';
 import 'package:todo/features/auth/register/cubit/register_cubit.dart';
 import 'package:todo/features/auth/register/cubit/register_state.dart';
-import 'package:todo/features/auth/widgets/auth_container.dart';
+import 'package:todo/shared/widgets/myContainer.dart';
 import 'package:todo/features/auth/widgets/auth_textFormField.dart';
-import 'package:todo/features/auth/widgets/myDivider.dart';
+import 'package:todo/shared/widgets/myDivider.dart';
 import 'package:todo/features/auth/widgets/social_buttons.dart';
 import 'package:todo/features/bottomBarScreen/bottomBar_screen.dart';
 import 'package:todo/features/home/home_screen.dart';
@@ -39,7 +39,7 @@ class RegisterScreen extends StatelessWidget {
       child: BlocConsumer<RegisterCubit, RegisterStates>(
         listener: (context, state) {
           if (state is RegisterToLoginState)
-             Navigator.of(context, rootNavigator: true)
+            Navigator.of(context, rootNavigator: true)
                 .pushReplacementNamed(LoginScreen.routeName);
         },
         builder: (context, state) {
@@ -73,7 +73,7 @@ class RegisterScreen extends StatelessWidget {
                       SizedBox(
                         height: 5 * heightMultiplier,
                       ), */
-                          AuthContainer(
+                          MyContainer(
                               child: Form(
                             key: _formKey,
                             child: Column(
@@ -144,7 +144,9 @@ class RegisterScreen extends StatelessWidget {
                             child: ColoredButton(
                                 text: "Register",
                                 function: () {
-                                  Navigator.of(context, rootNavigator:  true).pushReplacementNamed(BottomBarScreen.routeName);
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pushReplacementNamed(
+                                          BottomBarScreen.routeName);
                                   // if (_formKey.currentState!.validate()) {}
                                 }),
                           ),

@@ -95,3 +95,21 @@ bool isNextMonth(DateTime date){
     return false;
   }
 }
+
+String getPriorityText(Priority priority){
+  switch (priority){
+    case Priority.Important : return "Important";
+    case Priority.Normal : return "Normal";
+    case Priority.Low : return "Low";
+    default : return "Normal";
+  }
+}
+
+Priority getPriority(String value){
+  switch (value){
+    case "Important" : return Priority.Important;
+    case "Normal" : return Priority.Normal;
+    case "Low" : return Priority.Low;
+    default : return Priority.Normal;
+  }
+}
