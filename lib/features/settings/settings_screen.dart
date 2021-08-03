@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/login/login_screen.dart';
 import 'package:todo/features/auth/register/register_screen.dart';
 import 'package:todo/features/sync/sync_screen.dart';
@@ -20,14 +21,15 @@ class SettingsScreen extends StatelessWidget {
           SafeArea(
             child: BackButton(),
           ),
-            _buildGuestSettings(orientation, context),
-          // _buildUserSettings(orientation, context),
+          SessionManagement.isGuest()
+              ? _buildGuestSettings(orientation, context)
+              : _buildUserSettings(orientation, context),
         ],
       ),
     );
   }
 
-  Stack _buildUserSettings(Orientation orientation, BuildContext context){
+  Stack _buildUserSettings(Orientation orientation, BuildContext context) {
     return Stack(
       children: [
         Column(
@@ -47,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
             Padding(
               padding: EdgeInsets.only(top: 3 * heightMultiplier),
               child: Text(
-                "Mostafa Amer",
+                SessionManagement.getName(),
                 style: TextStyle(fontSize: 3.6 * textMultiplier),
               ),
             ),
@@ -59,8 +61,8 @@ class SettingsScreen extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              // alignment: Alignment.bottomCenter,
-              // height: double.infinity,
+                // alignment: Alignment.bottomCenter,
+                // height: double.infinity,
                 width: double.infinity,
                 // margin: EdgeInsets.only(left: 2 * widthMultiplier),
                 padding: EdgeInsets.only(

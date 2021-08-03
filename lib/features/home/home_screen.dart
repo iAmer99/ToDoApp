@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:todo/features/home/widgets/dayTasks.dart';
-import 'package:todo/features/home/widgets/day_content_builder.dart';
-import 'package:todo/features/home/widgets/noTasks.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/features/tasks/cubit/task_cubit.dart';
+import 'package:todo/features/tasks/cubit/task_state.dart';
+import 'package:todo/features/tasks/widgets/home_widgets/day_content_builder.dart';
 import 'package:todo/features/settings/settings_screen.dart';
-import 'package:todo/shared/widgets/task_widget.dart';
 import 'package:todo/shared/widgets/white_circles.dart';
 import 'package:todo/utils/colors.dart';
-import 'package:todo/utils/dummy_tasks.dart';
 import 'package:todo/utils/helper_functions.dart';
 import 'package:todo/utils/size_config.dart';
 
@@ -171,20 +170,37 @@ class _HomeScreenState extends State<HomeScreen>
                     );
   }
 
-  Expanded _buildTasks(Orientation orientation) {
-    return Expanded(
-      child: Container(
-        alignment:
-            orientation == Orientation.landscape ? Alignment.centerRight : null,
-        child: TabBarView(
-          controller: _controller,
-          children: [
-            DayContentBuilder(tasks: old),
-            DayContentBuilder(tasks: tasks),
-            DayContentBuilder(tasks: tasks),
-          ],
-        ),
-      ),
+  Widget _buildTasks(Orientation orientation) {
+    return BlocBuilder<TaskCubit, TaskStates>(
+      builder: (context, state) {
+        final cubit = TaskCubit.get(context);
+        if(state is TaskLoadingState){
+          return CircularProgressIndicator();
+        }else if(state is TaskErrorState){
+         return Center(
+            child: Text(state.errorMsg, style: TextStyle(
+              fontSize: 2 * textMultiplier
+            ),),
+          );
+        }
+        else{
+          return Expanded(
+            child: Container(
+              alignment:
+              orientation == Orientation.landscape ? Alignment.centerRight : null,
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  DayContentBuilder(tasks: cubit.yesterdayTasks),
+                  DayContentBuilder(tasks: cubit.todayTasks),
+                  DayContentBuilder(tasks: cubit.tomorrowTasks),
+                ],
+              ),
+            ),
+          );
+        }
+
+      },
     );
   }
 

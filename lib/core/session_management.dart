@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -9,6 +11,8 @@ class SessionManagement {
   static const String NAME_KEY = "name_key";
   static const String TOKEN_KEY = "token_key";
   static const String IMAGE_KEY = "image_key";
+  static const String HAS_CACHED_IMAGE = "cached_image";
+  static const String LAST_CHANGE_DATE = "last_change_date";
 
   static Box<dynamic>? box;
 
@@ -31,11 +35,22 @@ class SessionManagement {
 
   static String getToken() => box!.get(TOKEN_KEY);
 
-  static String getImagePath() => box!.get(IMAGE_KEY);
+  static File getImage() => box!.get(IMAGE_KEY);
+
+  static bool hasCachedImage() =>
+      box!.get(HAS_CACHED_IMAGE, defaultValue: false);
+
+  static String getLastChangeDate() => box!.get(LAST_CHANGE_DATE);
+
+  static void saveLastChangeDate(String date) =>
+      box!.put(LAST_CHANGE_DATE, date);
 
   static void onSeenOnBoarding() => box!.put(WELCOME_KEY, true);
 
-  static void saveImagePath(String img) => box!.put(IMAGE_KEY, img);
+  static void cacheImage(File img) {
+    box!.put(HAS_CACHED_IMAGE, true);
+    box!.put(IMAGE_KEY, img);
+  }
 
   static void createLoggedInSession(String name, String token) {
     box!.put(NAME_KEY, name);
