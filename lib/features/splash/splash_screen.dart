@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:todo/core/session_management.dart';
@@ -31,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(Duration(seconds: 1), () {
       _controller.forward();
       Timer(Duration(seconds: 2), () {
-        if (SessionManagement.isLoggedIn() || SessionManagement.isGuest()) {
+        if (FirebaseAuth.instance.currentUser != null || SessionManagement.isGuest()) {
           Navigator.of(context, rootNavigator: true)
               .pushReplacementNamed(BottomBarScreen.routeName);
         } else if(SessionManagement.sawOnBoarding()){

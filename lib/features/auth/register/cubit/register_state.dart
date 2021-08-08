@@ -12,6 +12,8 @@ class RegisterErrorState extends RegisterStates {
   RegisterErrorState(this.errorMsg);
 }
 
+class NoInternetConnection extends RegisterStates {}
+
 class RegisterOfflineState extends RegisterStates {}
 
 class RegisterToLoginState extends RegisterStates {}

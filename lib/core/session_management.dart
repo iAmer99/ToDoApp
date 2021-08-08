@@ -5,11 +5,9 @@ import 'package:path_provider/path_provider.dart';
 
 class SessionManagement {
   static const String APP_KEY = "todo_app";
-  static const String IS_LOGIN_KEY = "login_key";
   static const String WELCOME_KEY = "onBoarding_key";
   static const String IS_Guest = "guest_key";
   static const String NAME_KEY = "name_key";
-  static const String TOKEN_KEY = "token_key";
   static const String IMAGE_KEY = "image_key";
   static const String HAS_CACHED_IMAGE = "cached_image";
   static const String LAST_CHANGE_DATE = "last_change_date";
@@ -25,15 +23,12 @@ class SessionManagement {
     return box;
   }
 
-  static bool isLoggedIn() => box!.get(IS_LOGIN_KEY, defaultValue: false);
 
   static bool sawOnBoarding() => box!.get(WELCOME_KEY, defaultValue: false);
 
   static bool isGuest() => box!.get(IS_Guest, defaultValue: false);
 
   static String getName() => box!.get(NAME_KEY);
-
-  static String getToken() => box!.get(TOKEN_KEY);
 
   static File getImage() => box!.get(IMAGE_KEY);
 
@@ -52,16 +47,18 @@ class SessionManagement {
     box!.put(IMAGE_KEY, img);
   }
 
-  static void createLoggedInSession(String name, String token) {
+  static void createLoggedInSession(String name) {
     box!.put(NAME_KEY, name);
-    box!.put(TOKEN_KEY, token);
-    box!.put(IS_LOGIN_KEY, true);
     box!.put(IS_Guest, false);
   }
 
   static void createGuestSession() {
     box!.put(NAME_KEY, "Guest");
-    box!.put(IS_LOGIN_KEY, false);
     box!.put(IS_Guest, true);
+  }
+
+  static void logout(){
+    box!.clear();
+    onSeenOnBoarding();
   }
 }

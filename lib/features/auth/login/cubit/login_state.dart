@@ -12,6 +12,8 @@ class LoginErrorState extends LoginStates {
   LoginErrorState(this.errorMsg);
 }
 
+class NoInternetConnection extends LoginStates {}
+
 class LoginOfflineState extends LoginStates {}
 
 class LoginToRegisterState extends LoginStates {}

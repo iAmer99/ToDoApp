@@ -81,6 +81,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               child: ColoredButton(
                                   text: "Get Started",
                                   function: () {
+                                    SessionManagement.onSeenOnBoarding();
                                     Navigator.of(context, rootNavigator: true)
                                         .pushReplacementNamed(
                                             RegisterScreen.routeName);

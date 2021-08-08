@@ -8,13 +8,14 @@ import 'package:todo/utils/colors.dart';
 import 'package:todo/utils/helper_functions.dart';
 import 'package:todo/utils/size_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   await SessionManagement.init();
-  print(SessionManagement.getLastChangeDate());
   await LocalDataBase.openDataBase();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
