@@ -13,3 +13,17 @@ class LogoutErrorState extends LogoutStates {
 
   LogoutErrorState(this.errorMsg);
 }
+
+abstract class UploadingImageStates extends SettingsStates {}
+
+class UploadingImageLoadingState extends UploadingImageStates{}
+
+class UploadingImageSuccessState extends UploadingImageStates{}
+
+class UploadingImageErrorState extends UploadingImageStates{
+  final String errorMsg;
+
+  UploadingImageErrorState(this.errorMsg);
+}
+
+class UpdatedOfflineImageState extends SettingsStates{}

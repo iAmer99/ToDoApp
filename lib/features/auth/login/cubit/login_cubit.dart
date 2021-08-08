@@ -29,8 +29,14 @@ class LoginCubit extends Cubit<LoginStates> {
         final res = await repository.login(email, password);
         res.fold(
               (error) => emit(LoginErrorState(error!)),
-              (cred) {
+              (cred) async{
             SessionManagement.createLoggedInSession(cred.user!.displayName!);
+            if(cred.user!.photoURL != null){
+              print(cred.user!.photoURL);
+             File image = await repository.getImageFile(cred.user!.photoURL!);
+             print(image.path);
+             SessionManagement.cacheImage(image.path);
+            }
             emit(LoginSuccessState());
           },
         );

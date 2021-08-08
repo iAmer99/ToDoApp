@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/login/login_screen.dart';
@@ -28,11 +31,14 @@ class SettingsScreen extends StatelessWidget {
           if (state is LogoutSuccessState)
             Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
                 LoginScreen.routeName, (route) => false);
+          if (state is UploadingImageErrorState)
+            showErrorDialog(context, state.errorMsg);
         },
         builder: (context, state) {
           return Scaffold(
             body: ModalProgressHUD(
-              inAsyncCall: state is LogoutLoadingState,
+              inAsyncCall: state is LogoutLoadingState ||
+                  state is UploadingImageLoadingState,
               child: Stack(
                 children: [
                   ColoredCircles(),
@@ -54,7 +60,7 @@ class SettingsScreen extends StatelessWidget {
   Widget _buildUserSettings(Orientation orientation, BuildContext context) {
     return BlocBuilder<SettingsCubit, SettingsStates>(
         builder: (context, state) {
-          final cubit = SettingsCubit.get(context);
+      final cubit = SettingsCubit.get(context);
       return Stack(
         children: [
           Column(
@@ -200,23 +206,83 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  CircleAvatar _buildCircleAvatar() {
-    return CircleAvatar(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.black45),
+  Widget _buildCircleAvatar() {
+    return BlocBuilder<SettingsCubit, SettingsStates>(
+      builder: (context, state) {
+        final cubit = SettingsCubit.get(context);
+        return GestureDetector(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (ctx) {
+                  return AlertDialog(
+                    title: Text("Choose Image Source"),
+                    content: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(ctx).pop();
+                            cubit.pickImage(ImageSource.camera);
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.camera_alt, color: mainColor,),
+                              Text("Camera", style: TextStyle(color: mainColor),)
+                            ],
+                          ),
+                        ),
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(ctx).pop();
+                            cubit.pickImage(ImageSource.gallery);
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.image, color: mainColor,),
+                              Text("Gallery", style: TextStyle(color: mainColor),)
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(onPressed: (){
+                        Navigator.of(ctx).pop();
+                      }, child: Text("Cancel"))
+                    ],
+                  );
+                });
+          },
+          child: CircleAvatar(
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.black45),
+                ),
+                Icon(
+                  Icons.add_a_photo,
+                  color: Colors.white,
+                )
+              ],
+            ),
+            backgroundImage: _imageProvider(),
+            radius: 15 * imageSizeMultiplier,
           ),
-          Icon(
-            Icons.add_a_photo,
-            color: Colors.white,
-          )
-        ],
-      ),
-      backgroundImage: AssetImage('assets/images/default_profile_pic.jpg'),
-      radius: 15 * imageSizeMultiplier,
+        );
+      },
     );
+  }
+
+  ImageProvider _imageProvider() {
+    if (SessionManagement.hasCachedImage()) {
+      return FileImage(File(SessionManagement.getImage()));
+    } else {
+      return AssetImage('assets/images/default_profile_pic.jpg');
+    }
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo/core/session_management.dart';
 import 'package:todo/features/tasks/cubit/task_cubit.dart';
 import 'package:todo/features/tasks/cubit/task_state.dart';
 import 'package:todo/features/tasks/widgets/home_widgets/day_content_builder.dart';
@@ -96,8 +99,7 @@ class _HomeScreenState extends State<HomeScreen>
                               top: 6 * heightMultiplier,
                               left: 6 * heightMultiplier),
                           child: CircleAvatar(
-                            backgroundImage: AssetImage(
-                                'assets/images/default_profile_pic.jpg'),
+                            backgroundImage: _imageProvider(),
                             radius: 11 * imageSizeMultiplier,
                           ),
                         ),
@@ -237,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: EdgeInsets.only(top: 8 * heightMultiplier),
                 child: CircleAvatar(
                   backgroundImage:
-                      AssetImage('assets/images/default_profile_pic.jpg'),
+                      _imageProvider(),
                   radius: 11 * imageSizeMultiplier,
                 ),
               ),
@@ -294,5 +296,13 @@ class _HomeScreenState extends State<HomeScreen>
         ),
       ),
     );
+  }
+
+  ImageProvider _imageProvider(){
+    if(SessionManagement.hasCachedImage()){
+      return FileImage(File(SessionManagement.getImage()));
+    }else{
+      return AssetImage('assets/images/default_profile_pic.jpg');
+    }
   }
 }

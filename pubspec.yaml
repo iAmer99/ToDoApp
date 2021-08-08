@@ -36,7 +36,8 @@ dependencies:
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   dartz: 0.10.0-nullsafety.2
-  fluttertoast: ^8.0.8
+  image_picker: ^0.8.3+1
+  firebase_storage: ^10.0.1
 
 
 

@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as Path;
 
 class RegisterRepository {
 
@@ -17,4 +21,13 @@ class RegisterRepository {
       return Left(error.message);
     }
   }
+   FirebaseStorage storage = FirebaseStorage.instance;
+
+  void uploadCachedImage(File image) async{
+    String fileName = Path.basename(image.path);
+    await storage.ref('uploads/${_auth.currentUser!.uid}/$fileName').putFile(image);
+    final String imageUrl = await  storage.ref('uploads/${_auth.currentUser!.uid}/$fileName').getDownloadURL();
+    _auth.currentUser!.updatePhotoURL(imageUrl);
+  }
+
 }

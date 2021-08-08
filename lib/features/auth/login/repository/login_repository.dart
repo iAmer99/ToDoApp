@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class LoginRepository{
    FirebaseAuth _auth = FirebaseAuth.instance;
@@ -11,5 +14,9 @@ class LoginRepository{
     } on FirebaseAuthException catch(error){
       return Left(error.message);
     }
+  }
+
+  Future<File> getImageFile(String url) async{
+     return await DefaultCacheManager().getSingleFile(url);
   }
 }

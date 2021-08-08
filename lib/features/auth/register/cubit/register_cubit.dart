@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/session_management.dart';
@@ -29,6 +31,9 @@ class RegisterCubit extends Cubit<RegisterStates> {
               (error) => emit(RegisterErrorState(error!)),
               (_) {
             SessionManagement.createLoggedInSession(name);
+            if(SessionManagement.hasCachedImage()){
+              repository.uploadCachedImage(File(SessionManagement.getImage()));
+            }
             emit(RegisterSuccessState());
           },
         );

@@ -28,9 +28,9 @@ class SessionManagement {
 
   static bool isGuest() => box!.get(IS_Guest, defaultValue: false);
 
-  static String getName() => box!.get(NAME_KEY);
+  static String getName() => box!.get(NAME_KEY, defaultValue: "Guest");
 
-  static File getImage() => box!.get(IMAGE_KEY);
+  static String getImage() => box!.get(IMAGE_KEY);
 
   static bool hasCachedImage() =>
       box!.get(HAS_CACHED_IMAGE, defaultValue: false);
@@ -42,7 +42,7 @@ class SessionManagement {
 
   static void onSeenOnBoarding() => box!.put(WELCOME_KEY, true);
 
-  static void cacheImage(File img) {
+  static void cacheImage(String img) {
     box!.put(HAS_CACHED_IMAGE, true);
     box!.put(IMAGE_KEY, img);
   }
