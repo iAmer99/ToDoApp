@@ -26,4 +26,6 @@ class UploadingImageErrorState extends UploadingImageStates{
   UploadingImageErrorState(this.errorMsg);
 }
 
-class UpdatedOfflineImageState extends SettingsStates{}
+class UpdatedOfflineImageState extends UploadingImageStates{}
+
+class NoInternetConnection extends UploadingImageStates {}

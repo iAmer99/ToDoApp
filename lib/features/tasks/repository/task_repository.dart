@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart' as FireStorage;
+import 'package:path/path.dart' as Path;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -82,5 +84,15 @@ class TaskRepository {
 
   Future<File> getImageFile() async{
     return await DefaultCacheManager().getSingleFile(_auth.currentUser!.photoURL!);
+  }
+  final FireStorage.FirebaseStorage storage = FireStorage.FirebaseStorage.instance;
+
+  void uploadPickedImage() async{
+    String fileName = Path.basename(SessionManagement.getImage());
+    await storage.ref('uploads/${_auth.currentUser!.uid}/$fileName').putFile(
+        File(SessionManagement.getImage()));
+    final String imageUrl = await storage.ref(
+        'uploads/${_auth.currentUser!.uid}/$fileName').getDownloadURL();
+    _auth.currentUser!.updatePhotoURL(imageUrl);
   }
 }

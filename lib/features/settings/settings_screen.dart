@@ -33,6 +33,7 @@ class SettingsScreen extends StatelessWidget {
                 LoginScreen.routeName, (route) => false);
           if (state is UploadingImageErrorState)
             showErrorDialog(context, state.errorMsg);
+          if(state is NoInternetConnection) noInternetToast(context);
         },
         builder: (context, state) {
           return Scaffold(

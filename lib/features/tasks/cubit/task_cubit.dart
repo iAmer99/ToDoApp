@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/local/database.dart';
@@ -87,13 +88,17 @@ class TaskCubit extends Cubit<TaskStates> {
     emit(TaskSyncLoadingState());
     checkInternetConnection().then((internet) async {
       if (internet != null && internet) {
-        if (SessionManagement.hasCachedImage() &&
-            !File(SessionManagement.getImage()).existsSync()) {
-          await _repository.getImageFile().then((image) {
-            SessionManagement.cacheImage(image.path);
-          });
-        }
         try {
+          if (SessionManagement.hasCachedImage() &&
+              File(SessionManagement.getImage()).existsSync() &&
+              FirebaseAuth.instance.currentUser!.photoURL == null) {
+            _repository.uploadPickedImage();
+          } else if (SessionManagement.hasCachedImage() &&
+              !File(SessionManagement.getImage()).existsSync()) {
+            await _repository.getImageFile().then((image) {
+              SessionManagement.cacheImage(image.path);
+            });
+          }
           _repository.sync();
           emit(TaskSyncSuccessState());
         } on FirebaseException catch (error) {
