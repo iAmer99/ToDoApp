@@ -23,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _controller;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -33,162 +34,150 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (BuildContext context, Orientation orientation) {
-        return Scaffold(
-          body: orientation == Orientation.portrait
-              ? Column(
-                  children: [
-                    _buildHeader(),
-                    _buildTasks(orientation)
-                  ],
-                )
-              : Row(
-                  children: [
-                    Expanded(
-                      child: _buildLandScapeSide(),
-                    ),
-                    Expanded(child: _buildTasks(orientation)),
-                  ],
-                ),
-        );
-      },
+    Orientation orientation = MediaQuery.of(context).orientation;
+    return Scaffold(
+      key: _scaffoldKey,
+      body: orientation == Orientation.portrait
+          ? Column(
+              children: [_buildHeader(), _buildTasks(orientation)],
+            )
+          : Row(
+              children: [
+                _buildLandScapeSide(),
+                _buildTasks(orientation),
+              ],
+            ),
     );
   }
 
   Stack _buildLandScapeSide() {
     return Stack(
-                      children: [
-                        Container(
-                          color: mainColor,
-                          width: 45 * heightMultiplier,
-                        ),
-                        WhiteCircles(),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                bottom: 5 * widthMultiplier,
-                                left: 3 * heightMultiplier),
-                            child: InkWell(
-                              onTap: (){
-                                Navigator.of(context, rootNavigator: true).pushNamed(SettingsScreen.routeName);
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.settings,
-                                    color: Colors.white,
-                                    size: 7.5 * imageSizeMultiplier,
-                                  ),
-                                  Text(
-                                    "Settings",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 2.5 * textMultiplier),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 6 * heightMultiplier,
-                              left: 6 * heightMultiplier),
-                          child: CircleAvatar(
-                            backgroundImage: _imageProvider(),
-                            radius: 11 * imageSizeMultiplier,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 19 * heightMultiplier,
-                              left: 6 * heightMultiplier),
-                          child: Text(
-                            getGreeting(DateTime.now()),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 2.8 * textMultiplier),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: 35 * heightMultiplier),
-                          child: PreferredSize(
-                            preferredSize:
-                                Size(10 * widthMultiplier, double.infinity),
-                            child: RotatedBox(
-                              quarterTurns: 1,
-                              child: TabBar(
-                                unselectedLabelColor: Colors.white,
-                                indicatorColor: Colors.black45,
-                                tabs: [
-                                  RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Tab(
-                                      child: Text(
-                                        "Yesterday",
-                                        /* style: TextStyle(
+      children: [
+        Container(
+          color: mainColor,
+          width: 45 * heightMultiplier,
+        ),
+        WhiteCircles(),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: EdgeInsets.only(
+                bottom: 5 * widthMultiplier, left: 3 * heightMultiplier),
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed(SettingsScreen.routeName);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.settings,
+                    color: Colors.white,
+                    size: 7.5 * imageSizeMultiplier,
+                  ),
+                  Text(
+                    "Settings",
+                    style: TextStyle(
+                        color: Colors.white, fontSize: 2.5 * textMultiplier),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: 6 * heightMultiplier, left: 6 * heightMultiplier),
+          child: CircleAvatar(
+            backgroundImage: _imageProvider(),
+            radius: 11 * imageSizeMultiplier,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+              top: 19 * heightMultiplier, left: 6 * heightMultiplier),
+          child: Text(
+            getGreeting(DateTime.now()),
+            style:
+                TextStyle(color: Colors.white, fontSize: 2.8 * textMultiplier),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 35 * heightMultiplier),
+          child: PreferredSize(
+            preferredSize: Size(10 * widthMultiplier, double.infinity),
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: TabBar(
+                unselectedLabelColor: Colors.white,
+                indicatorColor: Colors.black45,
+                tabs: [
+                  RotatedBox(
+                    quarterTurns: 3,
+                    child: Tab(
+                      child: Text(
+                        "Yesterday",
+                        /* style: TextStyle(
                                         color: _controller.index == 0
                                             ? Colors.black45
                                             : Colors.white), */
-                                      ),
-                                    ),
-                                  ),
-                                  RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Tab(
-                                      child: Text(
-                                        "Today",
-                                        /* style: TextStyle(
+                      ),
+                    ),
+                  ),
+                  RotatedBox(
+                    quarterTurns: 3,
+                    child: Tab(
+                      child: Text(
+                        "Today",
+                        /* style: TextStyle(
                                         color: _controller.index == 1
                                             ? Colors.black45
                                             : Colors.white), */
-                                      ),
-                                    ),
-                                  ),
-                                  RotatedBox(
-                                    quarterTurns: 3,
-                                    child: Tab(
-                                      child: Text(
-                                        "Tomorrow",
-                                        /*   style: TextStyle(
+                      ),
+                    ),
+                  ),
+                  RotatedBox(
+                    quarterTurns: 3,
+                    child: Tab(
+                      child: Text(
+                        "Tomorrow",
+                        /*   style: TextStyle(
                                         color: _controller.index == 2
                                             ? Colors.black45
                                             : Colors.white), */
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                                controller: _controller,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
+                      ),
+                    ),
+                  ),
+                ],
+                controller: _controller,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildTasks(Orientation orientation) {
     return BlocBuilder<TaskCubit, TaskStates>(
       builder: (context, state) {
         final cubit = TaskCubit.get(context);
-        if(state is TaskLoadingState){
+        if (state is TaskLoadingState) {
           return CircularProgressIndicator();
-        }else if(state is TaskErrorState){
-         return Center(
-            child: Text(state.errorMsg, style: TextStyle(
-              fontSize: 2 * textMultiplier
-            ),),
+        } else if (state is TaskErrorState) {
+          return Center(
+            child: Text(
+              state.errorMsg,
+              style: TextStyle(fontSize: 2 * textMultiplier),
+            ),
           );
-        }
-        else{
+        } else {
           return Expanded(
             child: Container(
-              alignment:
-              orientation == Orientation.landscape ? Alignment.centerRight : null,
+              alignment: orientation == Orientation.landscape
+                  ? Alignment.centerRight
+                  : null,
               child: TabBarView(
                 controller: _controller,
                 children: [
@@ -200,7 +189,6 @@ class _HomeScreenState extends State<HomeScreen>
             ),
           );
         }
-
       },
     );
   }
@@ -219,8 +207,9 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: EdgeInsets.only(
                     top: 6 * heightMultiplier, right: 3 * widthMultiplier),
                 child: IconButton(
-                  onPressed: (){
-                    Navigator.of(context, rootNavigator: true).pushNamed(SettingsScreen.routeName);
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true)
+                        .pushNamed(SettingsScreen.routeName);
                   },
                   icon: Icon(
                     Icons.settings,
@@ -237,8 +226,7 @@ class _HomeScreenState extends State<HomeScreen>
               child: Padding(
                 padding: EdgeInsets.only(top: 8 * heightMultiplier),
                 child: CircleAvatar(
-                  backgroundImage:
-                      _imageProvider(),
+                  backgroundImage: _imageProvider(),
                   radius: 11 * imageSizeMultiplier,
                 ),
               ),
@@ -297,10 +285,11 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  ImageProvider _imageProvider(){
-    if(SessionManagement.hasCachedImage() && !SessionManagement.cachedDeleted()){
+  ImageProvider _imageProvider() {
+    if (SessionManagement.hasCachedImage() &&
+        !SessionManagement.cachedDeleted()) {
       return FileImage(File(SessionManagement.getImage()));
-    }else{
+    } else {
       return AssetImage('assets/images/default_profile_pic.jpg');
     }
   }
