@@ -6,6 +6,7 @@ import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/login/cubit/login_cubit.dart';
 import 'package:todo/features/auth/register/register_screen.dart';
 import 'package:todo/features/bottomBarScreen/bottomBar_screen.dart';
+import 'package:todo/features/sync/sync_screen.dart';
 import 'package:todo/shared/widgets/myContainer.dart';
 import 'package:todo/features/auth/widgets/auth_textFormField.dart';
 import 'package:todo/shared/widgets/myDivider.dart';
@@ -38,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                 .pushReplacementNamed(RegisterScreen.routeName);
           if(state is LoginErrorState) showErrorDialog(context, state.errorMsg);
           if(state is LoginSuccessState) Navigator.of(context, rootNavigator: true)
-              .pushReplacementNamed(BottomBarScreen.routeName);
+              .pushReplacementNamed(SyncScreen.routeName);
           if(state is NoInternetConnection) noInternetToast(context);
         },
         builder: (context, state) {

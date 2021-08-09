@@ -75,6 +75,22 @@ void noInternetToast(BuildContext context) {
   ));
 }
 
+List<Task> orderTasks(List<Task> tasks) {
+  int getBoolNum(bool value) {
+    if (value) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  tasks.sort((a , b)=> a.time.compareTo(b.time));
+  tasks.sort((a, b) {
+    return getBoolNum(a.isDone).compareTo(getBoolNum(b.isDone));
+  });
+  List<Task> orderedTasks = tasks;
+  return orderedTasks;
+}
+
 DateTime _dateTime = DateTime.now();
 
 bool isToday(DateTime date) {

@@ -32,10 +32,8 @@ class LoginCubit extends Cubit<LoginStates> {
               (cred) async{
             SessionManagement.createLoggedInSession(cred.user!.displayName!);
             if(cred.user!.photoURL != null){
-              print(cred.user!.photoURL);
-             File image = await repository.getImageFile(cred.user!.photoURL!);
-             print(image.path);
-             SessionManagement.cacheImage(image.path);
+              File image = await repository.getImageFile(cred.user!.photoURL!);
+              SessionManagement.cacheImage(image.path);
             }
             emit(LoginSuccessState());
           },

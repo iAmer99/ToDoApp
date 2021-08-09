@@ -21,6 +21,7 @@ class Task {
 
   Map<String, Object?> toMap() {
     Map<String, Object?> map = {
+      if(id != null) "id" : id,
       "title": title,
       "date": date,
       "time": time,
@@ -31,7 +32,7 @@ class Task {
     return map;
   }
 
-  factory Task.fromMap(Map map) {
+  factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
         id: map["id"],
         title: map["title"],

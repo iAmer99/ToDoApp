@@ -7,6 +7,7 @@ import 'package:todo/core/session_management.dart';
 import 'package:todo/features/auth/login/login_screen.dart';
 import 'package:todo/features/bottomBarScreen/bottomBar_screen.dart';
 import 'package:todo/features/onBoarding/onBoarding_screen.dart';
+import 'package:todo/features/sync/sync_screen.dart';
 import 'package:todo/shared/widgets/white_circles.dart';
 import 'package:todo/utils/colors.dart';
 import 'package:todo/utils/size_config.dart';
@@ -32,10 +33,15 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(Duration(seconds: 1), () {
       _controller.forward();
       Timer(Duration(seconds: 2), () {
-        if (FirebaseAuth.instance.currentUser != null || SessionManagement.isGuest()) {
+        if (FirebaseAuth.instance.currentUser != null) {
           Navigator.of(context, rootNavigator: true)
-              .pushReplacementNamed(BottomBarScreen.routeName);
-        } else if(SessionManagement.sawOnBoarding()){
+              .pushReplacementNamed(SyncScreen.routeName);
+        }else if(SessionManagement.isGuest()){
+          Navigator.of(context, rootNavigator: true)
+              .pushNamedAndRemoveUntil(
+              BottomBarScreen.routeName, (route) => false);
+        }
+        else if(SessionManagement.sawOnBoarding()){
           Navigator.of(context, rootNavigator: true)
               .pushReplacementNamed(LoginScreen.routeName);
            }else{

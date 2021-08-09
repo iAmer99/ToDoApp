@@ -23,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _controller;
-  bool? boo = false;
 
   @override
   void initState() {
@@ -299,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   ImageProvider _imageProvider(){
-    if(SessionManagement.hasCachedImage()){
+    if(SessionManagement.hasCachedImage() && !SessionManagement.cachedDeleted()){
       return FileImage(File(SessionManagement.getImage()));
     }else{
       return AssetImage('assets/images/default_profile_pic.jpg');

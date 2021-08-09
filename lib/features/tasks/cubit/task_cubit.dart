@@ -1,9 +1,12 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/local/database.dart';
 import 'package:todo/core/session_management.dart';
 import 'package:todo/features/tasks/cubit/task_state.dart';
 import 'package:todo/features/tasks/models/tasks_model.dart';
+import 'package:todo/features/tasks/repository/task_repository.dart';
 import 'package:todo/utils/helper_functions.dart';
 
 class TaskCubit extends Cubit<TaskStates> {
@@ -12,32 +15,33 @@ class TaskCubit extends Cubit<TaskStates> {
   static TaskCubit get(BuildContext context) =>
       BlocProvider.of<TaskCubit>(context);
 
+  final TaskRepository _repository = TaskRepository();
+
   List<Task>? allTasks;
   List<Task>? yesterdayTasks;
   List<Task>? todayTasks;
   List<Task>? tomorrowTasks;
   List<Task>? dayFilteredTasks;
 
-  DateTime calendarInitialDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+  DateTime calendarInitialDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   Future<void> getTasks() async {
     emit(TaskLoadingState());
     await LocalDataBase.getTasks().then((value) {
       allTasks = value;
-      todayTasks = allTasks!
+      todayTasks = orderTasks(allTasks!
           .where((element) => isToday(DateTime.parse(element.date)))
-          .toList();
-      tomorrowTasks = allTasks!
+          .toList());
+      tomorrowTasks = orderTasks(allTasks!
           .where((element) => isTomorrow(DateTime.parse(element.date)))
-          .toList();
-      yesterdayTasks = allTasks!
+          .toList());
+      yesterdayTasks = orderTasks(allTasks!
           .where((element) => isYesterday(DateTime.parse(element.date)))
-          .toList();
-      dayFilteredTasks = allTasks!
-          .where((element) {
+          .toList());
+      dayFilteredTasks = orderTasks(allTasks!.where((element) {
         return DateTime.parse(element.date) == calendarInitialDate;
-      })
-          .toList();
+      }).toList());
       emit(TaskSuccessState());
     }).catchError((error) {
       print(error.toString());
@@ -49,11 +53,9 @@ class TaskCubit extends Cubit<TaskStates> {
     emit(CalendarTasksLoadingState());
     try {
       dayFilteredTasks = allTasks != null
-          ? allTasks!
-              .where((element) {
-                return DateTime.parse(element.date) == date;
-              })
-              .toList()
+          ? orderTasks(allTasks!.where((element) {
+              return DateTime.parse(element.date) == date;
+            }).toList())
           : [];
       calendarInitialDate = date;
       emit(CalendarTasksSuccessState());
@@ -63,11 +65,11 @@ class TaskCubit extends Cubit<TaskStates> {
   }
 
   void checkDone(Task task) async {
-    await LocalDataBase.checkDone(task).then((value){
+    await LocalDataBase.checkDone(task).then((value) {
       getTasks();
       emit(TaskDoneChecked());
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
-    }).catchError((error){
+    }).catchError((error) {
       emit(TaskErrorState(error));
     });
   }
@@ -78,6 +80,35 @@ class TaskCubit extends Cubit<TaskStates> {
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
     }).catchError((error) {
       emit(TaskErrorState(error));
+    });
+  }
+
+  void sync() async {
+    emit(TaskSyncLoadingState());
+    checkInternetConnection().then((internet) async {
+      if (internet != null && internet) {
+        if (SessionManagement.hasCachedImage() &&
+            !File(SessionManagement.getImage()).existsSync()) {
+          await _repository.getImageFile().then((image) {
+            SessionManagement.cacheImage(image.path);
+          });
+        }
+        try {
+          _repository.sync();
+          emit(TaskSyncSuccessState());
+        } on FirebaseException catch (error) {
+          emit(TaskSyncErrorState(error.message!));
+        } catch (e) {
+          debugPrint(e.toString());
+          emit(TaskSyncErrorState("Something went wrong!"));
+        }
+      } else {
+        if (SessionManagement.hasCachedImage() &&
+            !File(SessionManagement.getImage()).existsSync()) {
+          SessionManagement.cachedImageDeleted();
+        }
+        emit(NoInternetConnection());
+      }
     });
   }
 }

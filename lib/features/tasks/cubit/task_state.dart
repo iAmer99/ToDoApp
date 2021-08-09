@@ -18,9 +18,7 @@ class TaskDoneChecked extends TaskStates {}
 
 abstract class TaskSyncStates extends TaskStates {}
 
-class TaskSyncToServerState extends TaskSyncStates {}
-
-class TaskSyncFromServerState extends TaskSyncStates {}
+class TaskSyncLoadingState extends TaskSyncStates {}
 
 class TaskSyncSuccessState extends TaskSyncStates {}
 
@@ -29,6 +27,8 @@ class TaskSyncErrorState extends TaskSyncStates {
 
   TaskSyncErrorState(this.errorMsg);
 }
+
+class NoInternetConnection extends TaskSyncStates {}
 
 // calendar states
 

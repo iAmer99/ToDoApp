@@ -279,7 +279,7 @@ class SettingsScreen extends StatelessWidget {
   }
 
   ImageProvider _imageProvider() {
-    if (SessionManagement.hasCachedImage()) {
+    if (SessionManagement.hasCachedImage() && !SessionManagement.cachedDeleted()) {
       return FileImage(File(SessionManagement.getImage()));
     } else {
       return AssetImage('assets/images/default_profile_pic.jpg');

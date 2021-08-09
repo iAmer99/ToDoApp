@@ -11,6 +11,7 @@ class SessionManagement {
   static const String IMAGE_KEY = "image_key";
   static const String HAS_CACHED_IMAGE = "cached_image";
   static const String LAST_CHANGE_DATE = "last_change_date";
+  static const String CACHED_DELETED = "cached_deleted";
 
   static Box<dynamic>? box;
 
@@ -32,10 +33,12 @@ class SessionManagement {
 
   static String getImage() => box!.get(IMAGE_KEY);
 
+  static bool cachedDeleted() => box!.get(CACHED_DELETED, defaultValue: false);
+
   static bool hasCachedImage() =>
       box!.get(HAS_CACHED_IMAGE, defaultValue: false);
 
-  static String getLastChangeDate() => box!.get(LAST_CHANGE_DATE);
+  static String? getLastChangeDate() => box!.get(LAST_CHANGE_DATE);
 
   static void saveLastChangeDate(String date) =>
       box!.put(LAST_CHANGE_DATE, date);
@@ -44,7 +47,12 @@ class SessionManagement {
 
   static void cacheImage(String img) {
     box!.put(HAS_CACHED_IMAGE, true);
+    box!.put(CACHED_DELETED, false);
     box!.put(IMAGE_KEY, img);
+  }
+
+  static void cachedImageDeleted(){
+    box!.put(CACHED_DELETED, true);
   }
 
   static void createLoggedInSession(String name) {
@@ -58,7 +66,9 @@ class SessionManagement {
   }
 
   static void logout(){
+    String? lastChange = getLastChangeDate();
     box!.clear();
+    if(lastChange != null) saveLastChangeDate(lastChange);
     onSeenOnBoarding();
   }
 }
