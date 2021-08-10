@@ -83,7 +83,17 @@ class TaskRepository {
   }
 
   Future<File> getImageFile() async{
-    return await DefaultCacheManager().getSingleFile(_auth.currentUser!.photoURL!);
+    if(_auth.currentUser!.providerData[0].providerId == "twitter.com"){
+      String lastUrlPart = "_normal.jpg";
+      String picUrl = _auth.currentUser!.photoURL!;
+      picUrl = picUrl.substring(0, picUrl.indexOf(lastUrlPart));
+      return await DefaultCacheManager().getSingleFile("$picUrl.jpg");
+    }else if(_auth.currentUser!.providerData[0].providerId == "facebook.com"){
+      return await DefaultCacheManager().getSingleFile("${_auth.currentUser!.photoURL!}?width=800&height=800");
+    }
+    else{
+      return await DefaultCacheManager().getSingleFile(_auth.currentUser!.photoURL!);
+    }
   }
   final FireStorage.FirebaseStorage storage = FireStorage.FirebaseStorage.instance;
 

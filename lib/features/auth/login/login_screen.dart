@@ -37,15 +37,29 @@ class LoginScreen extends StatelessWidget {
           if (state is LoginToRegisterState)
             Navigator.of(context, rootNavigator: true)
                 .pushReplacementNamed(RegisterScreen.routeName);
-          if(state is LoginErrorState) showErrorDialog(context, state.errorMsg);
-          if(state is LoginSuccessState) Navigator.of(context, rootNavigator: true)
-              .pushReplacementNamed(SyncScreen.routeName);
-          if(state is NoInternetConnection) noInternetToast(context);
+          if (state is LoginErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is GoogleLoginErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is FacebookLoginErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is TwitterLoginErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is LoginSuccessState ||
+              state is GoogleLoginSuccessState ||
+              state is FacebookLoginSuccessState ||
+              state is TwitterLoginSuccessState)
+            Navigator.of(context, rootNavigator: true)
+                .pushReplacementNamed(SyncScreen.routeName);
+          if (state is NoInternetConnection) noInternetToast(context);
         },
         builder: (context, state) {
           final LoginCubit cubit = LoginCubit.get(context);
           return ModalProgressHUD(
-            inAsyncCall: state is LoginLoadingState,
+            inAsyncCall: state is LoginLoadingState ||
+                state is GoogleLoginLoadingState ||
+                state is FacebookLoginLoadingState ||
+                state is TwitterLoginLoadingState,
             child: GestureDetector(
               onTap: () => closeKeyboard(context),
               child: Scaffold(
@@ -107,7 +121,8 @@ class LoginScreen extends StatelessWidget {
                                       onComplete: () {
                                         closeKeyboard(context);
                                         if (_formKey.currentState!.validate()) {
-                                          cubit.login(_emailController.text, _passwordController.text);
+                                          cubit.login(_emailController.text,
+                                              _passwordController.text);
                                         }
                                       })
                                 ],
@@ -124,7 +139,8 @@ class LoginScreen extends StatelessWidget {
                                   function: () {
                                     closeKeyboard(context);
                                     if (_formKey.currentState!.validate()) {
-                                      cubit.login(_emailController.text, _passwordController.text);
+                                      cubit.login(_emailController.text,
+                                          _passwordController.text);
                                     }
                                   }),
                             ),
@@ -142,9 +158,15 @@ class LoginScreen extends StatelessWidget {
                             ),
                             SocialButtons(
                                 type: "Login",
-                                facebook: () {},
-                                twitter: () {},
-                                google: () {}),
+                                facebook: () {
+                                  cubit.facebookLogin();
+                                },
+                                twitter: () {
+                                  cubit.twitterLogin();
+                                },
+                                google: () {
+                                  cubit.googleLogin();
+                                }),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Padding(
@@ -175,7 +197,7 @@ class LoginScreen extends StatelessWidget {
                                     SessionManagement.createGuestSession();
                                     Navigator.of(context, rootNavigator: true)
                                         .pushReplacementNamed(
-                                        BottomBarScreen.routeName);
+                                            BottomBarScreen.routeName);
                                   },
                                 ),
                               ),

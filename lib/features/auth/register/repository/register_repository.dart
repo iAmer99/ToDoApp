@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:path/path.dart' as Path;
 
 class RegisterRepository {
@@ -28,6 +29,10 @@ class RegisterRepository {
     await storage.ref('uploads/${_auth.currentUser!.uid}/$fileName').putFile(image);
     final String imageUrl = await  storage.ref('uploads/${_auth.currentUser!.uid}/$fileName').getDownloadURL();
     _auth.currentUser!.updatePhotoURL(imageUrl);
+  }
+
+  Future<File> getImageFile(String url) async{
+    return await DefaultCacheManager().getSingleFile(url);
   }
 
 }

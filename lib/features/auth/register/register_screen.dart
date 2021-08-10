@@ -43,17 +43,29 @@ class RegisterScreen extends StatelessWidget {
           if (state is RegisterToLoginState)
             Navigator.of(context, rootNavigator: true)
                 .pushReplacementNamed(LoginScreen.routeName);
-          if (state is RegisterSuccessState)
+          if (state is RegisterSuccessState ||
+              state is FacebookRegisterSuccessState ||
+              state is GoogleRegisterSuccessState ||
+              state is TwitterRegisterSuccessState)
             Navigator.of(context, rootNavigator: true)
                 .pushReplacementNamed(SyncScreen.routeName);
           if (state is RegisterErrorState)
             showErrorDialog(context, state.errorMsg);
-          if(state is NoInternetConnection) noInternetToast(context);
+          if (state is FacebookRegisterErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is TwitterRegisterErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is GoogleRegisterErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is NoInternetConnection) noInternetToast(context);
         },
         builder: (context, state) {
           final RegisterCubit cubit = RegisterCubit.get(context);
           return ModalProgressHUD(
-            inAsyncCall: state is RegisterLoadingState,
+            inAsyncCall: state is RegisterLoadingState ||
+                state is GoogleRegisterLoadingState ||
+                state is FacebookRegisterLoadingState ||
+                state is TwitterRegisterLoadingState,
             child: GestureDetector(
               onTap: () => closeKeyboard(context),
               child: Scaffold(
@@ -183,9 +195,15 @@ class RegisterScreen extends StatelessWidget {
                             ),
                             SocialButtons(
                                 type: "Register",
-                                facebook: () {},
-                                twitter: () {},
-                                google: () {}),
+                                facebook: () {
+                                  cubit.facebookRegister();
+                                },
+                                twitter: () {
+                                  cubit.twitterRegister();
+                                },
+                                google: () {
+                                  cubit.googleRegister();
+                                }),
                             Align(
                               alignment: Alignment.bottomCenter,
                               child: Padding(
