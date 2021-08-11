@@ -51,7 +51,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
                 BottomBarScreen.routeName, (route) => false);
           }
-          if(state is AddTaskErrorState) showErrorDialog(context, state.errorMsg);
+          if (state is AddTaskErrorState)
+            showErrorDialog(context, state.errorMsg);
+          if (state is CantCreateNotification)
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Time must be after now to get notification"),
+                duration: Duration(seconds: 2, milliseconds: 500)));
         },
         builder: (context, state) {
           final cubit = AddTaskCubit.get(context);
@@ -74,130 +79,146 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     SingleChildScrollView(
                       child: Align(
                           alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              MyContainer(
-                                  child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 2.0),
-                                      child: TextFormField(
-                                        controller: _title,
-                                        decoration: myDecoration(
-                                            label: "Title",
-                                            hint: "Enter task title",
-                                            myIcon: Icon(Icons
-                                                .drive_file_rename_outline)),
-                                        keyboardType: TextInputType.name,
-                                        validator: (String? value) {
-                                          return value!.isNotEmpty
-                                              ? null
-                                              : "Title is empty";
-                                        },
-                                      ),
-                                    ),
-                                    MyDivider(),
-                                    InkWell(
-                                      onTap: () async {
-                                        await showDatePicker(
-                                                context: context,
-                                                initialDate: cubit.initialDate,
-                                                firstDate: DateTime(
-                                                    DateTime.now().year - 20),
-                                                lastDate: DateTime(
-                                                    DateTime.now().year + 30))
-                                            .then((DateTime? value) {
-                                          if (value != null) {
-                                            cubit.changeDateOfTask(value);
-                                            _date.text =
-                                                "${value.day}/${value.month}/${value.year}";
-                                          }
-                                        });
-                                      },
-                                      child: IgnorePointer(
-                                        child: TextFormField(
-                                          controller: _date,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 1 * heightMultiplier),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MyContainer(
+                                    child: Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 3.5),
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                          controller: _title,
                                           decoration: myDecoration(
-                                              label: "Date",
-                                              hint: "Choose task date",
-                                              myIcon:
-                                                  Icon(Icons.calendar_today)),
+                                              label: "Title",
+                                              hint: "Enter task title",
+                                              myIcon: Icon(Icons
+                                                  .drive_file_rename_outline)),
+                                          keyboardType: TextInputType.name,
+                                          validator: (String? value) {
+                                            return value!.isNotEmpty
+                                                ? null
+                                                : "Title is empty";
+                                          },
                                         ),
-                                      ),
-                                    ),
-                                    MyDivider(),
-                                    InkWell(
-                                      onTap: () async {
-                                        await showTimePicker(
-                                                context: context,
-                                                initialTime: cubit.initialTime)
-                                            .then((TimeOfDay? value) {
-                                          if (value != null) {
-                                            cubit.changeTimeOfTask(value);
-                                            _time.text =
-                                                "${value.hour}:${value.minute}";
-                                          }
-                                        });
-                                      },
-                                      child: IgnorePointer(
-                                        child: TextFormField(
-                                          controller: _time,
-                                          decoration: myDecoration(
-                                              label: "Time",
-                                              hint: "Choose task time",
-                                              myIcon: Icon(
-                                                  Icons.access_time_sharp)),
+                                        MyDivider(),
+                                        InkWell(
+                                          onTap: () async {
+                                            closeKeyboard(context);
+                                            await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                        cubit.initialDate,
+                                                    firstDate: DateTime(
+                                                        DateTime.now().year - 20),
+                                                    lastDate: DateTime(
+                                                        DateTime.now().year + 30))
+                                                .then((DateTime? value) {
+                                              if (value != null) {
+                                                cubit.changeDateOfTask(value);
+                                                _date.text =
+                                                    "${value.day}/${value.month}/${value.year}";
+                                              }
+                                            });
+                                          },
+                                          child: IgnorePointer(
+                                            child: TextFormField(
+                                              controller: _date,
+                                              decoration: myDecoration(
+                                                  label: "Date",
+                                                  hint: "Choose task date",
+                                                  myIcon:
+                                                      Icon(Icons.calendar_today)),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        MyDivider(),
+                                        InkWell(
+                                          onTap: () async {
+                                            closeKeyboard(context);
+                                            await showTimePicker(
+                                                    context: context,
+                                                    initialTime:
+                                                        cubit.initialTime)
+                                                .then((TimeOfDay? value) {
+                                              if (value != null) {
+                                                cubit.changeTimeOfTask(value);
+                                                _time.text =
+                                                    "${value.hour}:${value.minute}";
+                                              }
+                                            });
+                                          },
+                                          child: IgnorePointer(
+                                            child: TextFormField(
+                                              controller: _time,
+                                              decoration: myDecoration(
+                                                  label: "Time",
+                                                  hint: "Choose task time",
+                                                  myIcon: Icon(
+                                                      Icons.access_time_sharp)),
+                                            ),
+                                          ),
+                                        ),
+                                        MyDivider(),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 30),
+                                          child:
+                                              DropdownButtonFormField<Priority>(
+                                            onTap: () {
+                                              closeKeyboard(context);
+                                            },
+                                            items: Priority.values.map((element) {
+                                              return DropdownMenuItem<Priority>(
+                                                child: Text(
+                                                    getPriorityText(element)),
+                                                value: element,
+                                              );
+                                            }).toList(),
+                                            //  icon: Icon(Icons.priority_high_rounded),
+                                            decoration: myDecoration(
+                                                label: "Priority",
+                                                hint: "",
+                                                myIcon: Icon(
+                                                    Icons.priority_high_rounded)),
+                                            onChanged: (value) {
+                                              cubit.choosePriority(value);
+                                            },
+                                            validator: (value) {
+                                              if (value == null) {
+                                                return "Choose the priority";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        MyDivider(),
+                                        MySwitcher(),
+                                      ],
                                     ),
-                                    MyDivider(),
-                                    DropdownButtonFormField<Priority>(
-                                      items: Priority.values.map((element) {
-                                        return DropdownMenuItem<Priority>(
-                                          child: Text(getPriorityText(element)),
-                                          value: element,
-                                        );
-                                      }).toList(),
-                                      //  icon: Icon(Icons.priority_high_rounded),
-                                      decoration: myDecoration(
-                                          label: "Priority",
-                                          hint: "",
-                                          myIcon: Icon(
-                                              Icons.priority_high_rounded)),
-                                      onChanged: (value) {
-                                        cubit.choosePriority(value);
-                                      },
-                                      validator: (value){
-                                        if(value == null){
-                                          return "Choose the priority";
-                                        }else{
-                                          return null;
-                                        }
-                                      },
-                                    ),
-                                    MyDivider(),
-                                    MySwitcher(),
-                                  ],
+                                  ),
+                                )),
+                                SizedBox(
+                                  height: 5 * heightMultiplier,
                                 ),
-                              )),
-                              SizedBox(
-                                height: 5 * heightMultiplier,
-                              ),
-                              Container(
-                                height: 8 * heightMultiplier,
-                                width: 75 * widthMultiplier,
-                                child: ColoredButton(
-                                    text: "Add Task",
-                                    function: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        cubit.addTask(title: _title.text);
-                                      }
-                                    }),
-                              )
-                            ],
+                                Container(
+                                  height: 8 * heightMultiplier,
+                                  width: 75 * widthMultiplier,
+                                  child: ColoredButton(
+                                      text: "Add Task",
+                                      function: () {
+                                        closeKeyboard(context);
+                                        if (_formKey.currentState!.validate()) {
+                                          cubit.addTask(title: _title.text);
+                                        }
+                                      }),
+                                )
+                              ],
+                            ),
                           )),
                     ),
                   ],

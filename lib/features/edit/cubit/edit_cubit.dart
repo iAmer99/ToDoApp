@@ -56,6 +56,15 @@ class EditCubit extends Cubit<EditStates> {
     notification = value;
   }
 
+  void checkNotificationAbility() {
+    DateTime _taskDateTime = DateTime(
+        _dateTime.year, _dateTime.month, _dateTime.day, _timeOfDay.hour,
+        _timeOfDay.minute);
+    if (!_taskDateTime.isAfter(DateTime.now())){
+      emit(CantCreateNotification());
+    }
+  }
+
   void saveChanges(int id, String title, bool done) {
     emit(EditLoadingState());
     DateTime _notificationDate = DateTime(_dateTime.year, _dateTime.month,

@@ -99,85 +99,34 @@ class SettingsScreen extends StatelessWidget {
                   // margin: EdgeInsets.only(left: 2 * widthMultiplier),
                   padding: EdgeInsets.only(
                       top: 2 * widthMultiplier,
-                      bottom: 2 * widthMultiplier,
+                      bottom: 10 * widthMultiplier,
                       left: 2 * widthMultiplier),
-                  decoration: BoxDecoration(color: mainColor),
-                  child: Column(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context, rootNavigator: true)
-                              .pushNamedAndRemoveUntil(SyncScreen.routeName,
-                                  (Route<dynamic> route) => false);
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.sync,
-                              color: secondaryColor,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "Sync Now",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: secondaryColor,
-                                  fontSize: 3.6 * textMultiplier),
-                            ),
-                          ],
-                        ),
+                      Container(
+                        child: ColoredButton(
+                          icon: Icon(Icons.sync, color: Colors.white,),
+                            text: "Sync",
+                            function: () {
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamedAndRemoveUntil(SyncScreen.routeName,
+                                      (Route<dynamic> route) => false);
+                            }),
+                        height: 8 * heightMultiplier,
+                        width: 40 * widthMultiplier,
                       ),
-                      Divider(),
-                      GestureDetector(
-                        onTap: () {
-                          cubit.openNotificationSettings();
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.notifications_on_rounded,
-                              color: secondaryColor,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "Edit notifications settings",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: secondaryColor,
-                                  fontSize: 3.1 * textMultiplier),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(),
-                      GestureDetector(
-                        onTap: () {
-                          cubit.logout();
-                        },
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.logout,
-                              color: secondaryColor,
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              "Logout",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  color: secondaryColor,
-                                  fontSize: 3.6 * textMultiplier),
-                            ),
-                          ],
-                        ),
+                      Container(
+                        child: ColoredButton(
+                            icon: Icon(Icons.logout, color: mainColor,),
+                            text: "Logout",
+                            myColor: mainColor,
+                            function: () {
+                              cubit.logout();
+                            }),
+                        height: 8 * heightMultiplier,
+                        width: 40 * widthMultiplier,
                       ),
                     ],
                   )),

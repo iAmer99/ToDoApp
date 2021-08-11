@@ -10,7 +10,7 @@ class MyContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
     //  margin: EdgeInsets.symmetric(horizontal: 2 * widthMultiplier ),
-     padding: EdgeInsets.only(bottom: 1 * heightMultiplier, top: 1.5 * heightMultiplier),
+     padding: EdgeInsets.only(bottom: 1 * heightMultiplier, top: 1.5 * heightMultiplier, left: 3),
       width: 83 * widthMultiplier,
       decoration: BoxDecoration(
         color: Colors.white,

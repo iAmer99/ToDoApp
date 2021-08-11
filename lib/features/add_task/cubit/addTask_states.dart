@@ -11,3 +11,5 @@ class AddTaskErrorState extends AddTaskStates {
 
   AddTaskErrorState(this.errorMsg);
 }
+
+class CantCreateNotification extends AddTaskStates {}

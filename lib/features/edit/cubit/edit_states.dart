@@ -11,3 +11,5 @@ class EditErrorState extends EditStates {
 
   EditErrorState(this.errorMsg);
 }
+
+class CantCreateNotification extends EditStates {}

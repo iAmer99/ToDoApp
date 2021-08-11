@@ -9,10 +9,7 @@ class DayContentForCalendar extends StatelessWidget {
   const DayContentForCalendar({required this.tasks});
   @override
   Widget build(BuildContext context) {
-    return tasks!.isNotEmpty?  DayTasks(tasks: tasks) : Padding(
-      padding: EdgeInsets.symmetric(
-         // vertical: 6 * heightMultiplier,
-          horizontal: 7 * widthMultiplier),
+    return tasks!.isNotEmpty?  DayTasks(tasks: tasks) : Center(
       child: Text("No Tasks" , style: TextStyle(
         fontSize: 2 * textMultiplier
       ),),

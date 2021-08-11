@@ -12,39 +12,70 @@ class OnBoardingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          svg,
-          height: 65 * imageSizeMultiplier,
-          width: 65 * imageSizeMultiplier,
-        ),
-        SizedBox(
-          height: 3.6 * heightMultiplier,
-        ),
-        Text(
-          title,
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 3.4 * textMultiplier,
-              fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          height: 2 * heightMultiplier,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: 3.6 * widthMultiplier),
-          child: Text(
-            description,
-            style: TextStyle(
-                color: Colors.grey,
-                fontSize: 2.2 * textMultiplier),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
+    return OrientationBuilder(
+      builder: (context, orientation){
+        return orientation == Orientation.portrait ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _svgPicture(),
+            SizedBox(
+              height: 3.6 * heightMultiplier,
+            ),
+            _title(),
+            SizedBox(
+              height: 2 * heightMultiplier,
+            ),
+            _description(),
+          ],
+        ) : Row(
+          children: [
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(child: _title()),
+                  Flexible(child: _description()),
+                ],
+              ),
+            ),
+            Flexible(child: _svgPicture()),
+          ],
+        );
+      },
     );
   }
+
+
+  Padding _description() {
+    return Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: 3.6 * widthMultiplier),
+        child: Text(
+          description,
+          style: TextStyle(
+              color: Colors.grey,
+              fontSize: 2.2 * textMultiplier),
+          textAlign: TextAlign.center,
+        ),
+      );
+  }
+
+  Text _title() {
+    return Text(
+        title,
+        style: TextStyle(
+            color: Colors.black,
+            fontSize: 3.4 * textMultiplier,
+            fontWeight: FontWeight.bold),
+      );
+  }
+
+  SvgPicture _svgPicture() {
+    return SvgPicture.asset(
+      svg,
+      height: 65 * imageSizeMultiplier,
+      width: 65 * imageSizeMultiplier,
+    );
+  }
+
 }

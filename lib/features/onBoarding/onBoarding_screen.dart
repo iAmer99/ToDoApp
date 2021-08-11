@@ -42,19 +42,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           svg: 'assets/svg/onBoarding1.svg',
                           title: 'Arrange All Schedule',
                           description:
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
                         ),
                         OnBoardingContent(
                           svg: 'assets/svg/onBoarding2.svg',
                           title: 'Manage Your Tasks',
                           description:
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
                         ),
                         OnBoardingContent(
                           svg: 'assets/svg/onBoarding3.svg',
                           title: 'Reminders Made Simple',
                           description:
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu nibh efficitur, feugiat magna ac, semper orci. Vestibulum viverra augue vel pellentesque volutpat.",
                         ),
                       ],
                       onPageChanged: (int index) => cubit.onPageChange(index),
@@ -66,47 +66,31 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       child: Container(
                         child: PageIndicator(),
                         margin: EdgeInsets.only(
-                            bottom: 15 * heightMultiplier,
-                            left: orientation == Orientation.landscape ? 80 * heightMultiplier : 0),
+                          bottom: orientation ==
+                              Orientation.portrait ? 15 * heightMultiplier : 24 * widthMultiplier),
                       ),
-                      alignment:
-                      orientation == Orientation.portrait ? Alignment.bottomCenter : Alignment.center,
+                      alignment: Alignment.bottomCenter,
                     ),
-                    orientation == Orientation.portrait
-                        ? Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              margin:
-                                  EdgeInsets.only(bottom: 5 * heightMultiplier),
-                              child: ColoredButton(
-                                  text: "Get Started",
-                                  function: () {
-                                    SessionManagement.onSeenOnBoarding();
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pushReplacementNamed(
-                                            RegisterScreen.routeName);
-                                  }),
-                              height: 8 * heightMultiplier,
-                              width: 75 * widthMultiplier,
-                            ),
-                          )
-                        : Align(
-                            child: Container(
-                              margin:
-                              EdgeInsets.only(right: 3 * heightMultiplier),
-                              child: ColoredButton(
-                                  text: "Skip",
-                                  function: () {
-                                    SessionManagement.onSeenOnBoarding();
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pushReplacementNamed(
-                                        RegisterScreen.routeName);
-                                  }),
-                              height: 8 * heightMultiplier,
-                              width: 40 * widthMultiplier,
-                            ),
-                            alignment: Alignment.centerRight,
-                          ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin:
+                        EdgeInsets.only(bottom: orientation ==
+                            Orientation.portrait ? 5 * heightMultiplier : 5 * widthMultiplier),
+                        child: ColoredButton(
+                            text: "Get Started",
+                            function: () {
+                              SessionManagement.onSeenOnBoarding();
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushReplacementNamed(
+                                  RegisterScreen.routeName);
+                            }),
+                        height: orientation ==
+                            Orientation.portrait ? 8 * heightMultiplier : 17 * widthMultiplier ,
+                        width: orientation == Orientation.portrait ? 75 *
+                            widthMultiplier : 65 * widthMultiplier,
+                      ),
+                    )
                   ],
                 ),
               );

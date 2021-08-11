@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen>
               top: 6 * heightMultiplier, left: 6 * heightMultiplier),
           child: CircleAvatar(
             backgroundImage: _imageProvider(),
-            radius: 11 * imageSizeMultiplier,
+            radius: 5.5 * heightMultiplier,
           ),
         ),
         Padding(
@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: EdgeInsets.only(top: 8 * heightMultiplier),
                 child: CircleAvatar(
                   backgroundImage: _imageProvider(),
-                  radius: 11 * imageSizeMultiplier,
+                  radius: 5.5 * heightMultiplier,
                 ),
               ),
             ),

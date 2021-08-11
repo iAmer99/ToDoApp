@@ -18,8 +18,12 @@ class AddTaskCubit extends Cubit<AddTaskStates> {
   DateTime initialDate = DateTime(_now.year, _now.month, _now.day);
   TimeOfDay initialTime = TimeOfDay.now();
   String _dateString =
-      DateTime(_now.year, _now.month, _now.day).toIso8601String();
-  String _timeString = "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
+  DateTime(_now.year, _now.month, _now.day).toIso8601String();
+  String _timeString = "${TimeOfDay
+      .now()
+      .hour}:${TimeOfDay
+      .now()
+      .minute}";
   DateTime _dateTime = _now;
   TimeOfDay _timeOfDay = TimeOfDay.now();
   Priority? _priority;
@@ -45,23 +49,35 @@ class AddTaskCubit extends Cubit<AddTaskStates> {
     notification = value;
   }
 
+  void checkNotificationAbility() {
+    DateTime _taskDateTime = DateTime(
+        _dateTime.year, _dateTime.month, _dateTime.day, _timeOfDay.hour,
+        _timeOfDay.minute);
+    if (!_taskDateTime.isAfter(DateTime.now())){
+      emit(CantCreateNotification());
+    }
+  }
+
   void addTask({
     required String title,
   }) async {
     emit(AddTaskLoadingState());
     DateTime _notificationDate =
-    DateTime(_dateTime.year, _dateTime.month, _dateTime.day, _timeOfDay.hour, _timeOfDay.minute);
-    tz.TZDateTime _timeZonedDateTime = tz.TZDateTime.from(_notificationDate, tz.local);
+    DateTime(_dateTime.year, _dateTime.month, _dateTime.day, _timeOfDay.hour,
+        _timeOfDay.minute);
+    tz.TZDateTime _timeZonedDateTime = tz.TZDateTime.from(
+        _notificationDate, tz.local);
     await LocalDataBase.insertToDB(Task(
-            title: title,
-            priority: _priority!,
-            date: _dateString,
-            time: _timeString,
-            tzDateTime: _timeZonedDateTime.toIso8601String(),
-            notification: notification,
-            isDone: false))
+        title: title,
+        priority: _priority!,
+        date: _dateString,
+        time: _timeString,
+        tzDateTime: _timeZonedDateTime.toIso8601String(),
+        notification: notification,
+        isDone: false))
         .then((id) {
-      if(notification) LocalNotification.scheduleAlarm(id, title, _timeZonedDateTime);
+      if (notification) LocalNotification.scheduleAlarm(
+          id, title, _timeZonedDateTime);
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
       emit(AddTaskSuccessState());
     }).catchError((error) {
