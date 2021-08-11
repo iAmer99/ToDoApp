@@ -68,17 +68,18 @@ class TaskCubit extends Cubit<TaskStates> {
 
   void checkDone(Task task) async {
     Task updatedTask = task;
-    if (task.notification)
-      LocalNotification.cancel(task.id!).then((_) {
-        updatedTask = Task(
-            title: task.title,
-            priority: task.priority,
-            date: task.date,
-            time: task.time,
-            notification: false,
-            isDone: task.isDone,
-            tzDateTime: task.tzDateTime);
-      });
+    if (task.notification && task.isDone) {
+      LocalNotification.cancel(task.id!);
+      updatedTask = Task(
+          title: task.title,
+          priority: task.priority,
+          date: task.date,
+          id: task.id,
+          time: task.time,
+          notification: false,
+          isDone: task.isDone,
+          tzDateTime: task.tzDateTime);
+    }
     await LocalDataBase.updateTask(updatedTask).then((_) {
       getTasks();
       emit(TaskDoneChecked());

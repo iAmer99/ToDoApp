@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:todo/features/add_task/cubit/addTask_cubit.dart';
+import 'package:timezone/timezone.dart';
 import 'package:todo/features/add_task/styles/formField_style.dart';
-import 'package:todo/features/add_task/widgets/mySwitch.dart';
 import 'package:todo/features/bottomBarScreen/bottomBar_screen.dart';
 import 'package:todo/features/tasks/models/tasks_model.dart';
 import 'package:todo/shared/widgets/colored_button.dart';
@@ -14,16 +12,20 @@ import 'package:todo/shared/widgets/myDivider.dart';
 import 'package:todo/utils/helper_functions.dart';
 import 'package:todo/utils/size_config.dart';
 
-import 'cubit/addTask_states.dart';
+import 'cubit/edit_cubit.dart';
+import 'cubit/edit_states.dart';
 
-class AddTaskScreen extends StatefulWidget {
-  static const String routeName = "/task_screen";
+class EditScreen extends StatefulWidget {
+  static const String routeName = "/edit_screen";
+  final Task task;
+
+  const EditScreen({required this.task});
 
   @override
-  _AddTaskScreenState createState() => _AddTaskScreenState();
+  _EditScreenState createState() => _EditScreenState();
 }
 
-class _AddTaskScreenState extends State<AddTaskScreen> {
+class _EditScreenState extends State<EditScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _title = TextEditingController();
@@ -32,31 +34,37 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   final TextEditingController _time = TextEditingController();
 
+  bool _notification = false;
+
   @override
   void initState() {
     super.initState();
-    _date.text =
-        "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
-    _time.text = "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}";
+    _title.text = widget.task.title;
+    DateTime _date = DateTime.parse(widget.task.date);
+    this._date.text = "${_date.day}/${_date.month}/${_date.year}";
+    _time.text = widget.task.time;
+    _notification = widget.task.notification;
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddTaskCubit(),
-      child: BlocConsumer<AddTaskCubit, AddTaskStates>(
+      create: (context) => EditCubit()
+        ..init(TZDateTime.parse(local, widget.task.tzDateTime),
+            widget.task.priority, _notification),
+      child: BlocConsumer<EditCubit, EditStates>(
         //    buildWhen: (prev, current) => current is AddTaskStates,
         listener: (context, state) {
-          if (state is AddTaskSuccessState) {
+          if (state is EditSuccessState) {
             Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
                 BottomBarScreen.routeName, (route) => false);
           }
-          if(state is AddTaskErrorState) showErrorDialog(context, state.errorMsg);
+          if (state is EditErrorState) showErrorDialog(context, state.errorMsg);
         },
         builder: (context, state) {
-          final cubit = AddTaskCubit.get(context);
+          final cubit = EditCubit.get(context);
           return ModalProgressHUD(
-            inAsyncCall: state is AddTaskLoadingState,
+            inAsyncCall: state is EditLoadingState,
             child: GestureDetector(
               onTap: () {
                 closeKeyboard(context);
@@ -104,7 +112,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       onTap: () async {
                                         await showDatePicker(
                                                 context: context,
-                                                initialDate: cubit.initialDate,
+                                                initialDate: DateTime.parse(
+                                                    widget.task.date),
                                                 firstDate: DateTime(
                                                     DateTime.now().year - 20),
                                                 lastDate: DateTime(
@@ -155,6 +164,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     ),
                                     MyDivider(),
                                     DropdownButtonFormField<Priority>(
+                                      value: widget.task.priority,
                                       items: Priority.values.map((element) {
                                         return DropdownMenuItem<Priority>(
                                           child: Text(getPriorityText(element)),
@@ -170,16 +180,43 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                       onChanged: (value) {
                                         cubit.choosePriority(value);
                                       },
-                                      validator: (value){
-                                        if(value == null){
+                                      validator: (value) {
+                                        if (value == null) {
                                           return "Choose the priority";
-                                        }else{
+                                        } else {
                                           return null;
                                         }
                                       },
                                     ),
                                     MyDivider(),
-                                    MySwitcher(),
+                                    SwitchListTile(
+                                      value: _notification,
+                                      onChanged: (bool? newValue) {
+                                        setState(() {
+                                          _notification = newValue!;
+                                        });
+                                        cubit.enableNotification(newValue!);
+                                      },
+                                      title: Row(
+                                        children: [
+                                          Icon(
+                                            Icons
+                                                .notification_important_rounded,
+                                            color:
+                                                Colors.black.withOpacity(0.4),
+                                          ),
+                                          SizedBox(
+                                            width: 2 * widthMultiplier,
+                                          ),
+                                          Text(
+                                            "Enable Notification",
+                                            style: TextStyle(
+                                                color: Colors.black
+                                                    .withOpacity(0.4)),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )),
@@ -190,10 +227,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                 height: 8 * heightMultiplier,
                                 width: 75 * widthMultiplier,
                                 child: ColoredButton(
-                                    text: "Add Task",
+                                    text: "Save",
                                     function: () {
                                       if (_formKey.currentState!.validate()) {
-                                        cubit.addTask(title: _title.text);
+                                        cubit.saveChanges(widget.task.id!,
+                                            _title.text, widget.task.isDone);
                                       }
                                     }),
                               )

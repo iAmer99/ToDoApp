@@ -65,7 +65,8 @@ class AddTaskCubit extends Cubit<AddTaskStates> {
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
       emit(AddTaskSuccessState());
     }).catchError((error) {
-      emit(AddTaskErrorState(error));
+      debugPrint(error.toString());
+      emit(AddTaskErrorState("Something went wrong!"));
     });
   }
 }

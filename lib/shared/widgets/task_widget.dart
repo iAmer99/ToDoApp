@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo/features/edit/edit_screen.dart';
 import 'package:todo/features/tasks/cubit/task_cubit.dart';
 import 'package:todo/features/tasks/cubit/task_state.dart';
 import 'package:todo/features/tasks/models/tasks_model.dart';
@@ -12,8 +13,7 @@ import 'package:todo/utils/size_config.dart';
 class TaskWidget extends StatelessWidget {
   final Task task;
 
-  const TaskWidget(
-      {required this.task});
+  const TaskWidget({required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,16 @@ class TaskWidget extends StatelessWidget {
                           ],
                         ));
               },
-            )
+            ),
+            IconSlideAction(
+              color: Colors.green,
+              icon: Icons.edit,
+              caption: "Edit",
+              onTap: () {
+                Navigator.of(context, rootNavigator: true)
+                    .pushNamed(EditScreen.routeName, arguments: task);
+              },
+            ),
           ],
           child: Container(
             // margin: EdgeInsets.symmetric(vertical: 5 * heightMultiplier, horizontal: 7 * widthMultiplier),
@@ -74,7 +83,9 @@ class TaskWidget extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15),
                           bottomLeft: Radius.circular(15)),
-                      color: task.isDone ? Colors.grey : getPriorityColor(task.priority),
+                      color: task.isDone
+                          ? Colors.grey
+                          : getPriorityColor(task.priority),
                     ),
                   ),
                   Checkbox(
