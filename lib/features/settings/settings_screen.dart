@@ -134,6 +134,30 @@ class SettingsScreen extends StatelessWidget {
                       Divider(),
                       GestureDetector(
                         onTap: () {
+                          cubit.openNotificationSettings();
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.notifications_on_rounded,
+                              color: secondaryColor,
+                            ),
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Text(
+                              "Edit notifications settings",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: secondaryColor,
+                                  fontSize: 3.1 * textMultiplier),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(),
+                      GestureDetector(
+                        onTap: () {
                           cubit.logout();
                         },
                         child: Row(

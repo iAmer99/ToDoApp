@@ -48,6 +48,7 @@ dependencies:
   flutter_local_notifications: ^8.1.1
   timezone: ^0.7.0
   flutter_native_timezone: ^2.0.0
+  app_settings: 4.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -57,6 +58,11 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.1
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/ic_launcher.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

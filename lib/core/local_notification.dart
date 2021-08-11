@@ -53,18 +53,20 @@ class LocalNotification {
         presentBadge: true,
         presentSound: true);
 
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        "It's a ToDo Time",
-        title,
-        tzDateTime,
-        NotificationDetails(
-            android: androidPlatformChannelSpecifics,
-            iOS: iOSPlatformChannelSpecifics),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
-    debugPrint("Scheduled $id");
+    if(tzDateTime.isAfter(DateTime.now())){
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+          id,
+          "It's a ToDo Time",
+          title,
+          tzDateTime,
+          NotificationDetails(
+              android: androidPlatformChannelSpecifics,
+              iOS: iOSPlatformChannelSpecifics),
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime);
+      debugPrint("Scheduled $id");
+    }
   }
 
   static syncScheduledNotifications(List<task.Task> tasks) async {
@@ -104,8 +106,20 @@ class LocalNotification {
     }
   }
 
+  static Future<bool> isRequestExist(int id) async{
+    List<PendingNotificationRequest> requests =
+        await flutterLocalNotificationsPlugin.pendingNotificationRequests();
+    List<int> requestsIDs = [];
+    requests.forEach((request) {
+      requestsIDs.add(request.id);
+    });
+    return requestsIDs.contains(id);
+  }
+
   static Future<void> cancel(int id) async{
-    await flutterLocalNotificationsPlugin.cancel(id);
-    debugPrint("Canceled $id");
+    if(await isRequestExist(id)){
+      await flutterLocalNotificationsPlugin.cancel(id);
+      debugPrint("Canceled $id");
+    }
   }
 }

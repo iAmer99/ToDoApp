@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -59,5 +60,9 @@ class SettingsCubit extends Cubit<SettingsStates> {
         emit(UpdatedOfflineImageState());
       }
     }
+  }
+
+  void openNotificationSettings() async{
+    await AppSettings.openNotificationSettings();
   }
 }
