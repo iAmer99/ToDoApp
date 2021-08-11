@@ -8,6 +8,7 @@ class Task {
   final String time;
   final bool notification;
   final bool isDone;
+  final String tzDateTime;
 
   Task({
     this.id,
@@ -17,6 +18,7 @@ class Task {
     required this.time,
     required this.notification,
     required this.isDone,
+    required this.tzDateTime,
   });
 
   Map<String, Object?> toMap() {
@@ -25,6 +27,7 @@ class Task {
       "title": title,
       "date": date,
       "time": time,
+      "tzDateTime" : tzDateTime,
       "priority": getPriorityText(priority),
       "done": isDone ? 1 : 0,
       "notification": notification ? 1 : 0
@@ -39,6 +42,7 @@ class Task {
         priority: getPriority(map["priority"]),
         date: map["date"],
         time: map["time"],
+        tzDateTime: map["tzDateTime"],
         notification: map["notification"] == 1 ? true : false,
         isDone: map["done"] == 1 ? true : false);
   }

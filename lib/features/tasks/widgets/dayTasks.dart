@@ -25,15 +25,7 @@ class DayTasks extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                         vertical: 0 * heightMultiplier,
                         horizontal: 7 * widthMultiplier),
-                    child: TaskWidget(
-                      id: tasks![index].id,
-                      title: tasks![index].title,
-                      time: tasks![index].time,
-                      priority: tasks![index].priority,
-                      isDone: tasks![index].isDone,
-                      notification: tasks![index].notification,
-                      date: tasks![index].date,
-                    ),
+                    child: TaskWidget(task: tasks![index],),
                   ),
                   Divider(
                     color: Colors.transparent,

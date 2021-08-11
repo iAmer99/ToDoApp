@@ -14,7 +14,8 @@ class TaskRepository {
       FirebaseFirestore.instance.collection('users');
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<void> sync() async {
+  Future<List<Task>> sync() async {
+    List<Task> returnedTasks = [];
     DocumentSnapshot? lastUpdateOnServerDoc =
         await _userCollection.doc('${_auth.currentUser!.uid}').get();
     Map? lastUpdateMap =
@@ -30,17 +31,20 @@ class TaskRepository {
       if (isLocalAfterServer)
         await LocalDataBase.getTasks().then((tasks) {
           syncToServer(tasks);
+          returnedTasks = tasks;
         });
-      if (isLocalBeforeServer) syncToLocal(lastUpdate);
+      if (isLocalBeforeServer) returnedTasks = await syncToLocal(lastUpdate);
     } else if (SessionManagement.getLastChangeDate() != null &&
         lastUpdate == null) {
       await LocalDataBase.getTasks().then((tasks) {
         syncToServer(tasks);
+        returnedTasks = tasks;
       });
     } else if (SessionManagement.getLastChangeDate() == null &&
         lastUpdate != null) {
-      syncToLocal(lastUpdate);
+      returnedTasks = await syncToLocal(lastUpdate);
     }
+    return returnedTasks;
   }
 
   void syncToServer(List<Task> tasks) async {
@@ -67,9 +71,10 @@ class TaskRepository {
         .set({'last_update': SessionManagement.getLastChangeDate()});
   }
 
-  void syncToLocal(String lastServerUpdate) async {
+  Future<List<Task>> syncToLocal(String lastServerUpdate) async {
     await LocalDataBase.db.delete('Tasks');
-    _userCollection
+    List<Task> tasks= [];
+   tasks = await _userCollection
         .doc('${_auth.currentUser!.uid}')
         .collection('Tasks')
         .get()
@@ -78,8 +83,12 @@ class TaskRepository {
         await LocalDataBase.insertToDB(
             Task.fromMap(element.data()));
       });
+      return snapshot.docs.map((element){
+        return Task.fromMap(element.data());
+      }).toList();
     });
     SessionManagement.saveLastChangeDate(lastServerUpdate);
+    return tasks;
   }
 
   Future<File> getImageFile() async{

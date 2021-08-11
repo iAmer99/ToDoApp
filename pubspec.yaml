@@ -45,7 +45,9 @@ dependencies:
     git:
       url: https://github.com/100lvlmaster/flutter_twitter_login.git
       ref: master
-
+  flutter_local_notifications: ^8.1.1
+  timezone: ^0.7.0
+  flutter_native_timezone: ^2.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

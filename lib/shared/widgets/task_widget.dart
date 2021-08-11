@@ -10,22 +10,10 @@ import 'package:todo/utils/helper_functions.dart';
 import 'package:todo/utils/size_config.dart';
 
 class TaskWidget extends StatelessWidget {
-  final int? id;
-  final String title;
-  final String time;
-  final String date;
-  final Priority priority;
-  final bool notification;
-  final bool isDone;
+  final Task task;
 
   const TaskWidget(
-      {required this.title,
-      required this.time,
-      required this.priority,
-      required this.notification,
-      required this.isDone,
-      required this.id,
-      required this.date});
+      {required this.task});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +41,7 @@ class TaskWidget extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(ctx).pop();
-                                  context.read<TaskCubit>().deleteTask(id);
+                                  context.read<TaskCubit>().deleteTask(task.id);
                                 },
                                 child: Text(
                                   "Delete",
@@ -86,27 +74,28 @@ class TaskWidget extends StatelessWidget {
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15),
                           bottomLeft: Radius.circular(15)),
-                      color: isDone ? Colors.grey : getPriorityColor(priority),
+                      color: task.isDone ? Colors.grey : getPriorityColor(task.priority),
                     ),
                   ),
                   Checkbox(
-                    value: isDone,
+                    value: task.isDone,
                     onChanged: (bool? value) {
                       context.read<TaskCubit>().checkDone(Task(
-                          id: id,
-                          time: time,
-                          title: title,
-                          date: date,
-                          notification: notification,
-                          isDone: value ?? isDone,
-                          priority: priority));
+                          id: task.id,
+                          time: task.time,
+                          title: task.title,
+                          date: task.date,
+                          tzDateTime: task.tzDateTime,
+                          notification: task.notification,
+                          isDone: value ?? task.isDone,
+                          priority: task.priority));
                     },
                     shape: CircleBorder(),
                   ),
                   Container(
                     child: Text(
-                      title,
-                      style: isDone ? doneTaskStyle() : null,
+                      task.title,
+                      style: task.isDone ? doneTaskStyle() : null,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       softWrap: true,
@@ -118,8 +107,8 @@ class TaskWidget extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        time,
-                        style: isDone ? doneTaskStyle() : null,
+                        task.time,
+                        style: task.isDone ? doneTaskStyle() : null,
                       ),
                     ),
                   )

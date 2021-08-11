@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo/core/local/database.dart';
+import 'package:todo/core/local_notification.dart';
 import 'package:todo/core/session_management.dart';
 import 'package:todo/features/tasks/cubit/task_state.dart';
 import 'package:todo/features/tasks/models/tasks_model.dart';
@@ -66,7 +67,19 @@ class TaskCubit extends Cubit<TaskStates> {
   }
 
   void checkDone(Task task) async {
-    await LocalDataBase.checkDone(task).then((value) {
+    Task updatedTask = task;
+    if (task.notification)
+      LocalNotification.cancel(task.id!).then((_) {
+        updatedTask = Task(
+            title: task.title,
+            priority: task.priority,
+            date: task.date,
+            time: task.time,
+            notification: false,
+            isDone: task.isDone,
+            tzDateTime: task.tzDateTime);
+      });
+    await LocalDataBase.updateTask(updatedTask).then((_) {
       getTasks();
       emit(TaskDoneChecked());
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
@@ -78,6 +91,8 @@ class TaskCubit extends Cubit<TaskStates> {
   void deleteTask(int? id) async {
     await LocalDataBase.deleteFromDB(id!).then((value) {
       getTasks();
+      if (allTasks!.firstWhere((element) => element.id == id).notification)
+        LocalNotification.cancel(id);
       SessionManagement.saveLastChangeDate(DateTime.now().toIso8601String());
     }).catchError((error) {
       emit(TaskErrorState(error));
@@ -99,7 +114,9 @@ class TaskCubit extends Cubit<TaskStates> {
               SessionManagement.cacheImage(image.path);
             });
           }
-          _repository.sync();
+           _repository.sync().then((tasks) async{
+            await LocalNotification.syncScheduledNotifications(tasks);
+          });
           emit(TaskSyncSuccessState());
         } on FirebaseException catch (error) {
           emit(TaskSyncErrorState(error.message!));

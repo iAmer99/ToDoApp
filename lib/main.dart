@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/bloc_observer.dart';
 import 'package:todo/core/local/database.dart';
+import 'package:todo/core/local_notification.dart';
 import 'package:todo/core/session_management.dart';
 import 'package:todo/features/splash/splash_screen.dart';
 import 'package:todo/transitions/routes.dart';
@@ -10,12 +11,14 @@ import 'package:todo/utils/size_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();
   await SessionManagement.init();
   await LocalDataBase.openDataBase();
   await Firebase.initializeApp();
+  await LocalNotification.init();
   runApp(MyApp());
 }
 
