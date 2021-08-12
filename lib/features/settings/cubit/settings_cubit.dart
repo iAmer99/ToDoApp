@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:todo/core/session_management.dart';
@@ -62,7 +60,4 @@ class SettingsCubit extends Cubit<SettingsStates> {
     }
   }
 
-  void openNotificationSettings() async{
-    await AppSettings.openNotificationSettings();
-  }
 }

@@ -77,8 +77,13 @@ class RegisterCubit extends Cubit<RegisterStates> {
         final UserCredential cred = await signInWithFacebook();
         SessionManagement.createLoggedInSession(cred.user!.displayName!);
         if(cred.user!.photoURL != null){
-          File image = await repository.getImageFile("${cred.user!.photoURL}?width=800&height=800");
-          SessionManagement.cacheImage(image.path);
+          if(cred.user!.photoURL!.contains("facebook.com")){
+            File image = await repository.getImageFile("${cred.user!.photoURL}?width=800&height=800");
+            SessionManagement.cacheImage(image.path);
+          }else{
+            File image = await repository.getImageFile("${cred.user!.photoURL}");
+            SessionManagement.cacheImage(image.path);
+          }
         }
         emit(FacebookRegisterSuccessState());
       }catch(error){
@@ -98,12 +103,18 @@ class RegisterCubit extends Cubit<RegisterStates> {
         try{
           final UserCredential cred = await signInWithTwitter();
           SessionManagement.createLoggedInSession(cred.user!.displayName!);
-          if(cred.user!.photoURL != null){
-            String lastUrlPart = "_normal.jpg";
-            String picUrl = cred.user!.photoURL!;
-            picUrl = picUrl.substring(0, picUrl.indexOf(lastUrlPart));
-            File image = await repository.getImageFile("$picUrl.jpg");
-            SessionManagement.cacheImage(image.path);
+          if(cred.user!.photoURL != null ){
+            if(cred.user!.photoURL!.contains("twimg.com")){
+              String lastUrlPart = "_normal.jpg";
+              String picUrl = cred.user!.photoURL!;
+              picUrl = picUrl.substring(0, picUrl.indexOf(lastUrlPart));
+              File image = await repository.getImageFile("$picUrl.jpg");
+              SessionManagement.cacheImage(image.path);
+            }else{
+              String picUrl = cred.user!.photoURL!;
+              File image = await repository.getImageFile(picUrl);
+              SessionManagement.cacheImage(image.path);
+            }
           }
           emit(TwitterRegisterSuccessState());
         }catch(error){

@@ -92,12 +92,12 @@ class TaskRepository {
   }
 
   Future<File> getImageFile() async{
-    if(_auth.currentUser!.providerData[0].providerId == "twitter.com"){
+    if(_auth.currentUser!.photoURL!.contains("twimg.com")){
       String lastUrlPart = "_normal.jpg";
       String picUrl = _auth.currentUser!.photoURL!;
       picUrl = picUrl.substring(0, picUrl.indexOf(lastUrlPart));
       return await DefaultCacheManager().getSingleFile("$picUrl.jpg");
-    }else if(_auth.currentUser!.providerData[0].providerId == "facebook.com"){
+    }else if(_auth.currentUser!.photoURL!.contains("facebook.com")){
       return await DefaultCacheManager().getSingleFile("${_auth.currentUser!.photoURL!}?width=800&height=800");
     }
     else{
