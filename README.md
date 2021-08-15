@@ -1,4 +1,4 @@
-# todo
+# ToDo
 
 A Flutter ToDo App to manage your day.
 
