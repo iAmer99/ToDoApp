@@ -1,16 +1,12 @@
 # todo
 
-A new Flutter project.
+A Flutter ToDo App to manage your day.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+A ToDo App built by Flutter using bloc pattern as a state management & Sqflite for local database.
+You also can be sign up in the app with your email or your social accounts to keep your tasks & todos synced with your account, used Firebase Auth, Firestore & Storage for that.
+You can also choose to enable notification for your tasks, used Flutter local notification for that.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Play Store](https://play.google.com/store/apps/details?id=com.amer.todo)
+- [Behance](https://www.behance.net/gallery/125424023/ToDo-app-UIUX-Design/modules/712240585)

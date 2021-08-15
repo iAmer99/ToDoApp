@@ -8,7 +8,7 @@ import 'package:todo/features/auth/register/cubit/register_state.dart';
 import 'package:todo/features/auth/register/repository/register_repository.dart';
 import 'package:todo/features/auth/social_auth/facebook.dart';
 import 'package:todo/features/auth/social_auth/google.dart';
-import 'package:todo/features/auth/social_auth/twitter.dart';
+import 'package:todo/features/auth/social_auth/twitter2.dart';
 import 'package:todo/utils/helper_functions.dart';
 
 class RegisterCubit extends Cubit<RegisterStates> {

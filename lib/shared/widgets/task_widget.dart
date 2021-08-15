@@ -21,6 +21,7 @@ class TaskWidget extends StatelessWidget {
     return BlocBuilder<TaskCubit, TaskStates>(
       builder: (context, state) {
         return Slidable(
+          key: ValueKey("${task.id}"),
           actionPane: SlidableDrawerActionPane(),
           secondaryActions: [
             MySlideAction(

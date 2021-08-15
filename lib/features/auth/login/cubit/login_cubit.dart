@@ -8,7 +8,7 @@ import 'package:todo/features/auth/login/cubit/login_state.dart';
 import 'package:todo/features/auth/login/repository/login_repository.dart';
 import 'package:todo/features/auth/social_auth/facebook.dart';
 import 'package:todo/features/auth/social_auth/google.dart';
-import 'package:todo/features/auth/social_auth/twitter.dart';
+import 'package:todo/features/auth/social_auth/twitter2.dart';
 import 'package:todo/utils/helper_functions.dart';
 
 class LoginCubit extends Cubit<LoginStates> {
