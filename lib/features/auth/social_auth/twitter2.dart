@@ -4,8 +4,8 @@ import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 Future<UserCredential> signInWithTwitter() async {
   // Create a TwitterLogin instance
   final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: 'Ezt7iziXNu0oyOB9iNDN0HjsQ',
-    consumerSecret:'Iv0H5UBYY5jLEwlBr2W7HpxsvKsxVZgkBG2RZ02w1NqgU8HxJi',
+    consumerKey: '<Twitter app key>',
+    consumerSecret:'<Twitter app secret>',
   );
 
   // Trigger the sign-in flow
